@@ -14,12 +14,12 @@ export const STATUS_STYLES = {
   HAZIRLANIYOR:    { label: 'Hazırlanıyor',    badge: 'bg-amber-50 text-amber-700 ring-amber-200',       dot: 'bg-amber-400' },
   DEPODA_BEKLIYOR: { label: 'Depoda Bekliyor', badge: 'bg-orange-50 text-orange-700 ring-orange-200',    dot: 'bg-orange-400' },
   YUKLENDI:        { label: 'Yüklendi',        badge: 'bg-violet-50 text-violet-700 ring-violet-200',    dot: 'bg-violet-400' },
-  YOLDA:           { label: 'Sevkiyatta',      badge: 'bg-sky-50 text-sky-700 ring-sky-200',             dot: 'bg-sky-400' },
+  SEVKIYATTA:      { label: 'Sevkiyatta',      badge: 'bg-sky-50 text-sky-700 ring-sky-200',             dot: 'bg-sky-400' },
   TESLIM_EDILDI:   { label: 'Teslim Edildi',   badge: 'bg-emerald-50 text-emerald-700 ring-emerald-200', dot: 'bg-emerald-500' },
   IPTAL:           { label: 'İptal Edildi',    badge: 'bg-rose-50 text-rose-700 ring-rose-200',          dot: 'bg-rose-400' },
 };
 
-export const FLOW = ['ALINDI', 'HAZIRLANIYOR', 'DEPODA_BEKLIYOR', 'YUKLENDI', 'YOLDA', 'TESLIM_EDILDI'];
+export const FLOW = ['ALINDI', 'HAZIRLANIYOR', 'DEPODA_BEKLIYOR', 'YUKLENDI', 'SEVKIYATTA', 'TESLIM_EDILDI'];
 
 export function formatDuration(minutes) {
   const total = Math.max(0, Math.floor(minutes));
