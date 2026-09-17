@@ -14,9 +14,9 @@ const REFRESH_MS = 30000;
 
 // Depo panelindeki aşama kırılımı
 const WAREHOUSE_PARTS = [
-  { key: 'preparing', label: 'Hazırlıkta', color: 'bg-amber-400' },
-  { key: 'waiting', label: 'Depoda', color: 'bg-violet-400' },
-  { key: 'transit', label: 'Yolda', color: 'bg-sky-400' },
+  { key: 'preparing', label: 'Hazırlanıyor', color: 'bg-amber-400' },
+  { key: 'waiting', label: 'Depoda Bekliyor', color: 'bg-orange-400' },
+  { key: 'transit', label: 'Sevkiyatta', color: 'bg-sky-400' },
 ];
 
 const TONES = {
@@ -236,9 +236,8 @@ export default function Dashboard() {
         <section className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
           <div className="mb-5 flex items-center gap-2">
             <Warehouse className="h-5 w-5 text-teal-600" />
-            <h2 className="font-semibold text-slate-900">Depo Yükü</h2>
+            <h2 className="font-semibold text-slate-900">Depo Durumu</h2>
           </div>
-          <p className="mb-5 -mt-3 text-sm text-slate-500">Aktif siparişler ve bulundukları aşama</p>
 
           <div className="space-y-5">
             {data.byWarehouse.map((w) => (
