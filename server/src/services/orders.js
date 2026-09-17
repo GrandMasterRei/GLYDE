@@ -322,10 +322,17 @@ export async function dashboardSummary(user) {
   const byStatus = STATUS_FLOW.map((status) => ({
     status, label: STATUS_LABELS[status], count: orders.filter((o) => o.status === status).length,
   }));
-  const byWarehouse = WAREHOUSE_NAMES.map((warehouse) => ({
-    warehouse,
-    count: orders.filter((o) => o.warehouse === warehouse && o.status !== 'TESLIM_EDILDI').length,
-  }));
+  const byWarehouse = WAREHOUSE_NAMES.map((warehouse) => {
+    const active = orders.filter((o) => o.warehouse === warehouse && o.status !== 'TESLIM_EDILDI');
+    const inStage = (...statuses) => active.filter((o) => statuses.includes(o.status)).length;
+    return {
+      warehouse,
+      count: active.length,
+      preparing: inStage('ALINDI', 'HAZIRLANIYOR'),
+      waiting: inStage('DEPODA_BEKLIYOR', 'YUKLENDI'),
+      transit: inStage('SEVKIYATTA'),
+    };
+  });
   const delayed = orders
     .filter((o) => o.is_delayed)
     .sort((a, b) => b.delay_minutes - a.delay_minutes)

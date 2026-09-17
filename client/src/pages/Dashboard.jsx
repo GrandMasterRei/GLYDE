@@ -6,11 +6,18 @@ import {
 } from 'lucide-react';
 import { api } from '../api';
 import { useAuth } from '../context/AuthContext';
-import { formatDuration } from '../constants';
+import { STATUS_STYLES, formatDuration } from '../constants';
 import StatusBadge from '../components/StatusBadge';
 import useDataRefresh from '../hooks/useDataRefresh';
 
 const REFRESH_MS = 30000;
+
+// Depo panelindeki aşama kırılımı
+const WAREHOUSE_PARTS = [
+  { key: 'preparing', label: 'Hazırlıkta', color: 'bg-amber-400' },
+  { key: 'waiting', label: 'Depoda', color: 'bg-violet-400' },
+  { key: 'transit', label: 'Yolda', color: 'bg-sky-400' },
+];
 
 const TONES = {
   sky: 'bg-sky-50 text-sky-600',
@@ -81,7 +88,7 @@ export default function Dashboard() {
   const firstName = user.name.split(' ')[0];
   const showActions = ['DEPO', 'LOJISTIK'].includes(user.role) && data.myActionCount > 0;
   const maxStage = Math.max(...data.byStatus.map((s) => s.count), 1);
-  const warehouseTotal = data.byWarehouse.reduce((sum, w) => sum + w.count, 0) || 1;
+  const maxWarehouse = Math.max(...data.byWarehouse.map((w) => w.count), 1);
 
   return (
     <div className="mx-auto max-w-7xl space-y-6">
@@ -151,17 +158,23 @@ export default function Dashboard() {
         <h2 className="mb-4 font-semibold text-slate-900">Sipariş Akışı</h2>
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
-          {data.byStatus.map((s) => (
+          {data.byStatus.map((s, i) => (
             <Link
               key={s.status}
               to={`/orders?status=${s.status}`}
-              className="rounded-xl border border-slate-200 p-4 transition hover:border-teal-300 hover:shadow-sm"
+              className="relative rounded-xl border border-slate-200 p-4 transition hover:border-teal-300 hover:shadow-sm"
             >
-              <p className="truncate text-sm text-slate-500">{s.label}</p>
-              <p className="mt-1 text-3xl font-semibold text-slate-900">{s.count}</p>
-              <div className="mt-3 h-1 overflow-hidden rounded-full bg-slate-100">
-                <div className="h-full rounded-full bg-teal-500" style={{ width: `${(s.count / maxStage) * 100}%` }} />
+              <div className="flex items-center gap-2">
+                <span className={`h-2.5 w-2.5 rounded-full ${STATUS_STYLES[s.status].dot}`} />
+                <p className="truncate text-sm text-slate-500">{s.label}</p>
               </div>
+              <p className="mt-1 text-3xl font-semibold text-slate-900">{s.count}</p>
+              <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-100">
+                <div className={`h-full rounded-full ${STATUS_STYLES[s.status].dot}`} style={{ width: `${(s.count / maxStage) * 100}%` }} />
+              </div>
+              {i < data.byStatus.length - 1 && (
+                <ChevronRight className="absolute -right-3.5 top-1/2 z-10 hidden h-5 w-5 -translate-y-1/2 text-slate-300 xl:block" />
+              )}
             </Link>
           ))}
         </div>
@@ -225,19 +238,24 @@ export default function Dashboard() {
             <Warehouse className="h-5 w-5 text-teal-600" />
             <h2 className="font-semibold text-slate-900">Depo Yükü</h2>
           </div>
+          <p className="mb-5 -mt-3 text-sm text-slate-500">Aktif siparişler ve bulundukları aşama</p>
 
           <div className="space-y-5">
             {data.byWarehouse.map((w) => (
               <Link key={w.warehouse} to={`/orders?warehouse=${encodeURIComponent(w.warehouse)}`} className="group block">
                 <div className="mb-1.5 flex items-center justify-between text-sm">
                   <span className="font-medium text-slate-700 group-hover:text-teal-700">{w.warehouse}</span>
-                  <span className="text-slate-500">
-                    <span className="font-semibold text-slate-900">{w.count}</span>
-                    <span className="ml-1 text-xs">%{Math.round((w.count / warehouseTotal) * 100)}</span>
-                  </span>
+                  <span className="font-semibold text-slate-900">{w.count}</span>
                 </div>
-                <div className="h-2 overflow-hidden rounded-full bg-slate-100">
-                  <div className="h-full rounded-full bg-teal-500 transition-all" style={{ width: `${(w.count / warehouseTotal) * 100}%` }} />
+                <div className="flex h-2 gap-0.5 overflow-hidden rounded-full bg-slate-100">
+                  {WAREHOUSE_PARTS.map(({ key, color }) => w[key] > 0 && (
+                    <div key={key} className={color} style={{ width: `${(w[key] / maxWarehouse) * 100}%` }} />
+                  ))}
+                </div>
+                <div className="mt-1.5 flex gap-3 text-xs text-slate-400">
+                  {WAREHOUSE_PARTS.map(({ key, label }) => (
+                    <span key={key}>{label} {w[key]}</span>
+                  ))}
                 </div>
               </Link>
             ))}
