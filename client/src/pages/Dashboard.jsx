@@ -60,7 +60,6 @@ export default function Dashboard() {
     } catch (err) {
       setError(err.message);
     } finally {
-      // Kullanıcı yenilendiğini görsün diye en az 600 ms
       setTimeout(() => setRefreshing(false), Math.max(0, 600 - (Date.now() - started)));
     }
   }, []);
@@ -236,7 +235,7 @@ export default function Dashboard() {
         <section className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
           <div className="mb-5 flex items-center gap-2">
             <Warehouse className="h-5 w-5 text-teal-600" />
-            <h2 className="font-semibold text-slate-900">Depo Durumu</h2>
+            <h2 className="font-semibold text-slate-900">Aktif Sipariş Dağılımı</h2>
           </div>
 
           <div className="space-y-5">
