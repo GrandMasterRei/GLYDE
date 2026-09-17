@@ -1,0 +1,50 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: golive
+      POSTGRES_PASSWORD: golive
+      POSTGRES_DB: golive_panel
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U golive -d golive_panel"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  server:
+    build: ./server
+    environment:
+      PORT: 4000
+      DATABASE_URL: postgres://golive:golive@db:5432/golive_panel
+      JWT_SECRET: glyde-gizli-anahtar-bunu-degistir
+      # 30: 30 dakikalık yol 1 dakikada biter. Gerçek süre için 1
+      SIMULATION_SPEED: 30
+      # true: her açılışta örnek veriler güncel saatle yeniden yüklenir
+      RESET_DATA_ON_START: "true"
+      DB_DIR: /db
+      # İsteğe bağlı: tanımlanırsa asistan yapay zekâ modunda çalışır
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ASSISTANT_MODEL: ${ASSISTANT_MODEL:-claude-haiku-4-5-20251001}
+    volumes:
+      - ./db:/db:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "4000:4000"
+    restart: unless-stopped
+
+  client:
+    build: ./client
+    depends_on:
+      - server
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+
+volumes:
+  pgdata:

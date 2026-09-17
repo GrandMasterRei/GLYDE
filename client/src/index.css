@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  @apply bg-slate-50 text-slate-800 antialiased;
+}
+
+/* Harita */
+.leaflet-container {
+  font-family: inherit;
+  background: #eef2f6;
+}
+.leaflet-tooltip {
+  border: 0;
+  border-radius: 8px;
+  padding: 6px 10px;
+  box-shadow: 0 4px 12px rgb(15 23 42 / 0.12);
+}
+/* Sade, gri tonlu harita altlığı */
+.map-tiles {
+  filter: grayscale(1) brightness(1.04) contrast(0.92);
+}
+/* Araç işaretçisi saniyelik güncellemeler arasında akıcı kaysın */
+.leaflet-marker-icon.truck-marker {
+  transition: transform 1s linear;
+}
+/* Yakınlaştırma sırasında kaydırma olmasın */
+.map-moving .leaflet-marker-icon.truck-marker {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .leaflet-marker-icon.truck-marker { transition: none; }
+}
+
+/* ---------- Koyu tema ----------
+   Renk değişkenleri koyu tona çevrilir; bileşenlerde ayrıca sınıf gerekmez. */
+html.dark {
+  color-scheme: dark;
+  --color-slate-50: #0b1120;
+  --color-slate-100: #172033;
+  --color-slate-200: #263044;
+  --color-slate-300: #3a4660;
+  --color-slate-400: #6b778c;
+  --color-slate-500: #94a0b4;
+  --color-slate-600: #b4bfd0;
+  --color-slate-700: #cfd8e3;
+  --color-slate-800: #e2e8f0;
+  --color-slate-900: #f1f5f9;
+
+  --color-teal-50: rgb(20 184 166 / 0.14);
+  --color-teal-100: rgb(20 184 166 / 0.22);
+  --color-teal-200: rgb(20 184 166 / 0.35);
+  --color-teal-300: rgb(20 184 166 / 0.5);
+  --color-teal-600: #2dd4bf;
+  --color-teal-700: #5eead4;
+  --color-sky-50: rgb(56 189 248 / 0.12);
+  --color-sky-100: rgb(56 189 248 / 0.2);
+  --color-sky-200: rgb(56 189 248 / 0.32);
+  --color-sky-600: #38bdf8;
+  --color-sky-700: #7dd3fc;
+  --color-sky-800: #bae6fd;
+  --color-emerald-50: rgb(16 185 129 / 0.14);
+  --color-emerald-200: rgb(16 185 129 / 0.32);
+  --color-emerald-600: #34d399;
+  --color-emerald-700: #6ee7b7;
+  --color-amber-50: rgb(245 158 11 / 0.14);
+  --color-amber-200: rgb(245 158 11 / 0.32);
+  --color-amber-600: #fbbf24;
+  --color-amber-700: #fcd34d;
+  --color-amber-800: #fde68a;
+  --color-orange-50: rgb(249 115 22 / 0.14);
+  --color-orange-200: rgb(249 115 22 / 0.32);
+  --color-orange-700: #fdba74;
+  --color-violet-50: rgb(139 92 246 / 0.16);
+  --color-violet-200: rgb(139 92 246 / 0.35);
+  --color-violet-700: #c4b5fd;
+  --color-red-50: rgb(239 68 68 / 0.14);
+  --color-red-100: rgb(239 68 68 / 0.22);
+  --color-red-200: rgb(239 68 68 / 0.35);
+  --color-red-600: #f87171;
+  --color-red-700: #fca5a5;
+  --color-red-800: #fecaca;
+  --color-rose-50: rgb(244 63 94 / 0.14);
+  --color-rose-200: rgb(244 63 94 / 0.32);
+  --color-rose-700: #fda4af;
+}
+
+html.dark .bg-white,
+html.dark .hover\:bg-white:hover {
+  background-color: #111a2b;
+}
+html.dark .bg-white\/90 { background-color: rgb(17 26 43 / 0.9); }
+html.dark .bg-white\/95 { background-color: rgb(17 26 43 / 0.95); }
+html.dark .ring-white { --tw-ring-color: #111a2b; }
+
+html.dark .map-tiles {
+  filter: grayscale(1) invert(1) brightness(0.85) contrast(0.95);
+}
+html.dark .leaflet-container { background: #0b1120; }
+html.dark .leaflet-bar a,
+html.dark .leaflet-control-attribution,
+html.dark .leaflet-tooltip {
+  background: #111a2b;
+  color: #cfd8e3;
+  border-color: #263044;
+}
+html.dark .leaflet-control-attribution a { color: #5eead4; }
+html.dark .leaflet-tooltip-top::before { border-top-color: #111a2b; }
